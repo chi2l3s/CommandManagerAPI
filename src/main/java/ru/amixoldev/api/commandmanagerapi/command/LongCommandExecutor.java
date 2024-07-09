@@ -1,50 +1,77 @@
 package ru.amixoldev.api.commandmanagerapi.command;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class LongCommandExecutor implements TabExecutor {
-    @Getter(AccessLevel.PROTECTED)
-    private final List<SubCommandWrapper> subCommands = new ArrayList<>();
+    private final List<LongCommandExecutor.SubCommandWrapper> subCommands = new ArrayList();
 
     protected void addSubCommand(SubCommand command, String[] aliases, Permission permission) {
-        this.subCommands.add(new SubCommandWrapper(command, aliases, permission));
+        this.subCommands.add(new LongCommandExecutor.SubCommandWrapper(command, aliases, permission));
     }
 
     @Nullable
-    protected SubCommandWrapper getWrapperFromLabel(String label) {
-        for (SubCommandWrapper wrapper: subCommands) {
-            for (String alias: wrapper.aliases) {
+    protected LongCommandExecutor.SubCommandWrapper getWrapperFromLabel(String label) {
+        Iterator var2 = this.subCommands.iterator();
+
+        while(var2.hasNext()) {
+            LongCommandExecutor.SubCommandWrapper wrapper = (LongCommandExecutor.SubCommandWrapper)var2.next();
+            String[] var4 = wrapper.aliases;
+            int var5 = var4.length;
+
+            for(int var6 = 0; var6 < var5; ++var6) {
+                String alias = var4[var6];
                 if (alias.equalsIgnoreCase(label)) {
                     return wrapper;
                 }
             }
         }
+
         return null;
     }
 
     protected List<String> getFirstAliases() {
-        final List<String> result = new ArrayList<>();
-        for (final SubCommandWrapper wrapper: subCommands) {
+        List<String> result = new ArrayList();
+        Iterator var2 = this.subCommands.iterator();
+
+        while(var2.hasNext()) {
+            LongCommandExecutor.SubCommandWrapper wrapper = (LongCommandExecutor.SubCommandWrapper)var2.next();
             String alias = wrapper.aliases[0];
             result.add(alias);
         }
+
         return result;
     }
 
-    @AllArgsConstructor
-    @Getter
+    protected List<LongCommandExecutor.SubCommandWrapper> getSubCommands() {
+        return this.subCommands;
+    }
+
     public static class SubCommandWrapper {
         private final SubCommand command;
         private final String[] aliases;
         private final Permission permission;
+
+        public SubCommandWrapper(SubCommand command, String[] aliases, Permission permission) {
+            this.command = command;
+            this.aliases = aliases;
+            this.permission = permission;
+        }
+
+        public SubCommand getCommand() {
+            return this.command;
+        }
+
+        public String[] getAliases() {
+            return this.aliases;
+        }
+
+        public Permission getPermission() {
+            return this.permission;
+        }
     }
 }
-

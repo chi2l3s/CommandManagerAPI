@@ -1,0 +1,4 @@
+name: CommandManagerAPI
+version: '${version}'
+main: ru.amixoldev.api.commandmanagerapi.CommandManagerAPI
+api-version: '1.16'

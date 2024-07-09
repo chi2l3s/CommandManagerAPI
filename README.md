@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/chi2l3s/CommandManagerAPI.svg)](https://jitpack.io/#chi2l3s/CommandManagerAPI)
 # Welcome!
 
 ## Welcome to MyAPI
